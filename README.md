@@ -1,4 +1,4 @@
-# rgudw
+# rgudw (RPCS3 Game Update Downloader)
 A command-line program that downloads game update files for RPCS3  
 
 Required dependencies  

@@ -28,17 +28,71 @@ def folder_exists(path):
     else:
         return False
 
-def read_game_ids(path):
-    if (file_exists(path) == True):
-        if Path(path).name == "games.yml":
-            with open(path, "r") as games_yml:
-                data = yaml.safe_load(games_yml)
-                for i in data.keys():
-                    game_ids.append(i)
+def read_game_ids(id):
+    if file_exists(id) == True and Path(id).name == "games.yml":
+        with open(id, "r") as games_yml:
+            data = yaml.safe_load(games_yml)
+            for i in data.keys():
+                game_ids.append(i)
+    elif len(id) == 9:
+        gameid = id[0:4].upper()
+        gameid = gameid + id[4:]
+        if gameid[0:4] == "BCAS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCAX" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCED" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCES" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCJB" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCJS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCKS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BCUS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLAS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLES" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLJM" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLJS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLJX" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLKS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLUD" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "BLUS" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "MRTC" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPEA" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPUB" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPUA" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPEB" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPJB" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPIA" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPJA" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        elif gameid[0:4] == "NPHA" and gameid[4:].isdecimal() == True:
+            game_ids.append(gameid)
+        else:
+            print("Unknown game id: " + gameid)
+
     else:
-        if Path(path).name != "games.yml":
-            print(path + " is not a games.yml file")
-            sys.exit(1)
+        print("Game ID or the path to games.yml is incorrect")
+        sys.exit(1)
 
 def read_game_data():
     # this is required for the PlayStation's game update server
@@ -120,12 +174,12 @@ def download_game_updates():
 def main():
     print("rgudw.py (v0.1)")
     if len(sys.argv) < 2:
-        print("usage: rgudw.py path/to/games.yml")
+        print("usage: rgudw.py [path/to/games.yml] || [GAMEID]")
     elif len(sys.argv) >= 3:
-        print("usage: rgudw.py path/to/games.yml")
+        print("usage: rgudw.py [path/to/games.yml] || [GAMEID]")
     else:
         print()
-        print("-> Reading games.yaml")
+        print("-> Reading game ids")
         read_game_ids(sys.argv[1])
         print()
         print("-> Reading game data")

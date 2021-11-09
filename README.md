@@ -12,4 +12,4 @@ To install the required Python dependencies you need to either use your Linux di
 
 ### Usage
 rgudw.py is easy to use  
-Open your favourite terminal program and run `python3 rgudw.py path/to/games.yml`  
+Open your favourite terminal program and run `python3 rgudw.py path/to/games.yml` or `python3 rgudw.py GAME12345`  

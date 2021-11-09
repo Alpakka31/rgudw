@@ -1,15 +1,15 @@
 # rgudw (RPCS3 Game Update Downloader)
-A command-line program that downloads game update files for RPCS3  
+A command-line program that downloads game update files for RPCS3 written in Python  
 
-Required dependencies  
+Required Python dependencies  
   - PyYAML  
   - requests  
   - urllib3  
   - tqdm  
 
 ### How-To  
-To install the required dependencies you need to either use your Linux distributions's package manager or use Python's pip package manager  
+To install the required Python dependencies you need to either use your Linux distribution's package manager or use Python's pip package manager  
 
 ### Usage
 rgudw.py is easy to use  
-Open your favourite terminal program and run `./rgudw.py path/to/games.yaml`  
+Open your favourite terminal program and run `python3 rgudw.py path/to/games.yml`  

@@ -10,7 +10,19 @@ from tqdm import tqdm
 
 list_of_games = []
 game_ids = []
-game_update_directory = str(Path.home()) + "\PS3 Game Updates"
+
+def check_platform():
+	if sys.platform.startswith("freebsd"):
+		return "freebsd"
+	elif sys.platform.startswith("linux"):
+		return "linux"
+	elif sys.platform.startswith("win32"):
+		return "windows"
+
+if check_platform() == "linux" or check_platform() == "freebsd":
+	game_update_directory = str(Path.home()) + "/PS3 Game Updates"
+elif check_platform() == "windows":
+	game_update_directory = str(Path.home()) + "\PS3 Game Updates"
 
 def convert_bytes_to_megabytes(size):
     size = int(float(size))/1024.0**2
@@ -37,6 +49,8 @@ def read_game_ids(id):
     elif len(id) == 9:
         gameid = id[0:4].upper()
         gameid = gameid + id[4:]
+
+	# valid ids
         if gameid[0:4] == "BCAS" and gameid[4:].isdecimal() == True:
             game_ids.append(gameid)
         elif gameid[0:4] == "BCAX" and gameid[4:].isdecimal() == True:
@@ -112,7 +126,7 @@ def read_game_data():
         }
 
         resp = requests.get("https://a0.ww.np.dl.playstation.net/tpl/np/" + i + "/" + i + "-ver.xml", verify=False)
-        if (resp.content == b'' or resp.status_code == 404):
+        if resp.content == b'' or resp.status_code == 404:
             print("No data found for game ID: " + i + " - Skipping")
             continue
         tree = ElementTree.fromstring(resp.content)
@@ -124,7 +138,7 @@ def read_game_data():
             game['updates_sysver'].append(j.get('ps3_system_ver'))
             game['updates_url'].append(j.get('url'))
 
-            if (j.find('paramsfo') != None):
+            if j.find('paramsfo') != None:
                 game['name'] = j.find('paramsfo').find('TITLE').text
 
         list_of_games.append(game)
@@ -135,7 +149,7 @@ def download_game_updates():
     # has to be disabled as well
     urllib3.disable_warnings()
 
-    if (folder_exists(game_update_directory) == False):
+    if folder_exists(game_update_directory) == False:
         print("Creating directory " + game_update_directory)
         path = Path(game_update_directory)
         path.mkdir(parents=True)
@@ -143,30 +157,54 @@ def download_game_updates():
     for i in list_of_games:
         print("Downloading game updates: " + i['name'] + " (" + i['id'] + ")")
 
-        if (folder_exists(game_update_directory + "\\" + i['id']) == False):
-            gamedir = Path(game_update_directory + "\\" + i['id'])
-            gamedir.mkdir()
+        if check_platform() == "linux" or check_platform() == "freebsd":
+            if folder_exists(game_update_directory + "/" + i['id']) == False:
+                gamedir = Path(game_update_directory + "/" + i['id'])
+                gamedir.mkdir()
+        elif check_platform() == "win32":
+            if folder_exists(game_update_directory + "\\" + i['id']) == False:
+                gamedir = Path(game_update_directory + "\\" + i['id'])
+                gamedir.mkdir()
+
 
         for j in i['updates_url']:
             filename = j.split('/')[-1]
-            if (file_exists(game_update_directory + "\\" + i['id'] + "\\" + filename) == True):
-                print("Game update '" + filename + "' already downloaded - Skipping")
-                continue
+
+            if check_platform() == "linux" or check_platform() == "freebsd":
+                if file_exists(game_update_directory + "/" + i['id'] + "/" + filename) == True:
+                    print("Game update '" + filename + "' already downloaded - Skipping")
+                    continue
+            elif check_platform() == "win32":
+                if file_exists(game_update_directory + "\\" + i['id'] + "\\" + filename) == True:
+                    print("Game update '" + filename + "' already downloaded - Skipping")
+                    continue
 
             with requests.get(j, stream=True) as resp:
                 resp.raise_for_status()
 
                 length = int(resp.headers.get('content-length', 0))
-                with open(game_update_directory + "\\" + i['id'] + "\\" + filename, 'wb') as f, tqdm(
-                    desc=filename,
-                    total=length,
-                    unit='iB',
-                    unit_scale=True,
-                    unit_divisor=1024,
-                ) as bar:
-                    for chunk in resp.iter_content(chunk_size=8192):
-                        size = f.write(chunk)
-                        bar.update(size)
+                if check_platform() == "linux" or check_platform() == "freebsd":
+                    with open(game_update_directory + "/" + i['id'] + "/" + filename, 'wb') as f, tqdm(
+                        desc=filename,
+                        total=length,
+                        unit='iB',
+                        unit_scale=True,
+                        unit_divisor=1024,
+                    ) as bar:
+                        for chunk in resp.iter_content(chunk_size=8192):
+                            size = f.write(chunk)
+                            bar.update(size)
+                elif check_platform() == "win32":
+                    with open(game_update_directory + "\\" + i['id'] + "\\" + filename, 'wb') as f, tqdm(
+                        desc=filename,
+                        total=length,
+                        unit='iB',
+                        unit_scale=True,
+                        unit_divisor=1024,
+                    ) as bar:
+                        for chunk in resp.iter_content(chunk_size=8192):
+                            size = f.write(chunk)
+                            bar.update(size)
 
     print("Download complete")
 

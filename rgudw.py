@@ -161,7 +161,7 @@ def download_game_updates():
             if folder_exists(game_update_directory + "/" + i['id']) == False:
                 gamedir = Path(game_update_directory + "/" + i['id'])
                 gamedir.mkdir()
-        elif check_platform() == "win32":
+        elif check_platform() == "windows":
             if folder_exists(game_update_directory + "\\" + i['id']) == False:
                 gamedir = Path(game_update_directory + "\\" + i['id'])
                 gamedir.mkdir()
@@ -174,7 +174,7 @@ def download_game_updates():
                 if file_exists(game_update_directory + "/" + i['id'] + "/" + filename) == True:
                     print("Game update '" + filename + "' already downloaded - Skipping")
                     continue
-            elif check_platform() == "win32":
+            elif check_platform() == "windows":
                 if file_exists(game_update_directory + "\\" + i['id'] + "\\" + filename) == True:
                     print("Game update '" + filename + "' already downloaded - Skipping")
                     continue
@@ -194,7 +194,7 @@ def download_game_updates():
                         for chunk in resp.iter_content(chunk_size=8192):
                             size = f.write(chunk)
                             bar.update(size)
-                elif check_platform() == "win32":
+                elif check_platform() == "windows":
                     with open(game_update_directory + "\\" + i['id'] + "\\" + filename, 'wb') as f, tqdm(
                         desc=filename,
                         total=length,

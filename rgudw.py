@@ -1,4 +1,5 @@
 import sys
+from tabnanny import check
 from typing import Text
 import yaml
 import os
@@ -18,8 +19,10 @@ def check_platform():
 		return "linux"
 	elif sys.platform.startswith("win32"):
 		return "windows"
+	elif sys.platform.startswith("darwin"):
+		return "macos"
 
-if check_platform() == "linux" or check_platform() == "freebsd":
+if check_platform() == "linux" or check_platform() == "freebsd" or check_platform() == "macos":
 	game_update_directory = str(Path.home()) + "/PS3 Game Updates"
 elif check_platform() == "windows":
 	game_update_directory = str(Path.home()) + "\PS3 Game Updates"
@@ -157,7 +160,7 @@ def download_game_updates():
     for i in list_of_games:
         print("Downloading game updates: " + i['name'] + " (" + i['id'] + ")")
 
-        if check_platform() == "linux" or check_platform() == "freebsd":
+        if check_platform() == "linux" or check_platform() == "freebsd" or check_platform() == "macos":
             if folder_exists(game_update_directory + "/" + i['id']) == False:
                 gamedir = Path(game_update_directory + "/" + i['id'])
                 gamedir.mkdir()
@@ -170,7 +173,7 @@ def download_game_updates():
         for j in i['updates_url']:
             filename = j.split('/')[-1]
 
-            if check_platform() == "linux" or check_platform() == "freebsd":
+            if check_platform() == "linux" or check_platform() == "freebsd" or check_platform() == "macos":
                 if file_exists(game_update_directory + "/" + i['id'] + "/" + filename) == True:
                     print("Game update '" + filename + "' already downloaded - Skipping")
                     continue
@@ -183,7 +186,7 @@ def download_game_updates():
                 resp.raise_for_status()
 
                 length = int(resp.headers.get('content-length', 0))
-                if check_platform() == "linux" or check_platform() == "freebsd":
+                if check_platform() == "linux" or check_platform() == "freebsd" or check_platform() == "macos":
                     with open(game_update_directory + "/" + i['id'] + "/" + filename, 'wb') as f, tqdm(
                         desc=filename,
                         total=length,
@@ -210,7 +213,7 @@ def download_game_updates():
 
 
 def main():
-    print("rgudw.py (v0.1)")
+    print("rgudw.py (v0.2)")
     if len(sys.argv) < 2:
         print("usage: rgudw.py [path/to/games.yml] || [GAMEID]")
     elif len(sys.argv) >= 3:

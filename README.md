@@ -4,6 +4,7 @@ A command-line program that downloads game update files for RPCS3 written in Pyt
 Supports
   - Windows
   - Linux
+  - macOS
   - FreeBSD
 
 Required Python dependencies  

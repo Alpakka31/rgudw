@@ -1,5 +1,4 @@
 import sys
-from tabnanny import check
 from typing import Text
 import yaml
 import os

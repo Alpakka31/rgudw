@@ -1,4 +1,6 @@
 # rgudw (RPCS3 Game Update Downloader)
+
+### DEPRECATED. Use https://github.com/Alpakka31/ps3gameupd_dl instead.
 A command-line program that downloads game update files for RPCS3 written in Python  
 
 Supports
